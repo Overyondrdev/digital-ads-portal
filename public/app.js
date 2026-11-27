@@ -999,6 +999,12 @@
     if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
   });
   $('[data-upload]').addEventListener('click', function () { if (M) uploadForm(); });
+  // The header is sticky: publish its height as --top-h so sticky toolbars sit under it and anchors/focus scroll clear of it.
+  (function () {
+    var top = document.querySelector('header.top');
+    if (!top || !window.ResizeObserver) return;
+    new ResizeObserver(function () { document.documentElement.style.setProperty('--top-h', Math.ceil(top.getBoundingClientRect().height) + 'px'); }).observe(top);
+  })();
   // The bell and Help menus open just below their button (the header wraps onto several rows on phones).
   [['inbox', '[data-bell]'], ['help-menu', '[data-help-btn]']].forEach(function (x) {
     var menu = document.getElementById(x[0]), btn = $(x[1]);

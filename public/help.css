@@ -64,7 +64,7 @@ mark { background: #e6ff99; color: inherit; border-radius: 3px; padding: 0 1px; 
 
 /* ---------------------------------------------------------------- article */
 .hc-art { display: grid; grid-template-columns: 240px minmax(0, 1fr) 220px; gap: 36px; align-items: start; }
-.hc-side, .hc-rel { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.hc-side, .hc-rel { position: sticky; top: calc(var(--top-h) + 20px); display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
 .hc-side a, .hc-rel a:not(.btn) { padding: 7px 10px; border-radius: 8px; text-decoration: none; color: var(--yondr-ink); }
 .hc-side a:hover, .hc-rel a:not(.btn):hover { background: var(--yondr-mist); }
 .hc-side a[aria-current="page"] { background: var(--yondr-forest); color: var(--yondr-offwhite); font-weight: 600; }

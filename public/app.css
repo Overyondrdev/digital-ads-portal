@@ -19,6 +19,9 @@
 }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
+/* --top-h is the sticky header's height (app.js/help.js measure it; these are fallbacks), so anchors and focus land below it. */
+:root { --top-h: 76px; }
+html { scroll-padding-top: calc(var(--top-h) + 12px); }
 body {
   min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column;
   background: var(--yondr-paper); color: var(--yondr-ink); font: 400 16px/1.5 var(--yondr-font-text);
@@ -33,12 +36,17 @@ a { color: inherit; }
 .eyebrow { margin: 0 0 16px; text-wrap: balance; font: 600 13px/1.4 var(--yondr-font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--yondr-moss); }
 .dark .eyebrow { color: var(--yondr-lichen); }
 
-/* Top bar */
-.top { padding: 24px 0; }
+/* Top bar: stays in view while scrolling. Solid, above page content (toolbar 5, editor bar 6) but below the selection bar,
+   job pill, toasts, the tour and the feedback widget; dialogs and popovers sit in the top layer anyway. */
+.top { position: sticky; top: 0; z-index: 15; padding: 18px 0; background: var(--yondr-paper); border-bottom: 1px solid var(--yondr-mist);
+       box-shadow: 0 6px 16px -14px rgb(28 48 11 / .35); }
 .top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
-.brand { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; }
+/* The logo goes to the Yondr Dev Portal (all portals); the app name goes to this app's home. */
+.brand { display: inline-flex; align-items: center; gap: 14px; }
+.brand a { text-decoration: none; }
 .brand img { width: 104px; height: auto; display: block; }
-.brand span { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--yondr-moss); padding-left: 14px; border-left: 1px solid var(--yondr-stone); }
+.brand-app { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--yondr-moss); padding-left: 14px; border-left: 1px solid var(--yondr-stone); white-space: nowrap; }
+.brand-app:hover { color: var(--yondr-forest); text-decoration: underline; text-underline-offset: 4px; }
 .who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 14px; color: var(--yondr-moss); min-width: 0; }
 .who .email { color: var(--yondr-ink); font-weight: 600; max-width: 26ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .who a, .who button { display: inline-flex; align-items: center; min-height: 38px; font: inherit; cursor: pointer; background: transparent; color: var(--yondr-forest); font-weight: 600; text-decoration: none; border: 1px solid var(--yondr-stone); padding: 7px 14px; border-radius: 999px; transition: border-color .2s, background .2s; white-space: nowrap; }
@@ -63,9 +71,20 @@ main { flex: 1; padding: 8px 0 48px; }
 .rise { animation: rise .7s var(--ease) both; animation-delay: calc(var(--i, 0) * .1s); }
 
 @media (max-width: 640px) {
-  .brand span { display: none; }
-  .who .signed { display: none; }
+  :root { --top-h: 88px; }
+  /* Phones: two short rows (logo + app name, then the controls on one line) so the sticky header stays low. */
+  .top { padding: 10px 0; }
+  .top .wrap { gap: 8px; }
+  .brand { gap: 10px; }
+  .brand img { width: 88px; }
+  .brand-app { font-size: 11px; padding-left: 10px; }
+  .who { flex-wrap: nowrap; width: 100%; gap: 6px; }
+  .who .signed, .who .email, .who .role { display: none; }
+  .who select { flex: 1 1 0; min-width: 0; }
+  .who > a:last-child { margin-left: auto; }
   .who a, .who button { padding: 6px 12px; font-size: 13px; }
+  .who .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .who .give, .who .helpbtn { padding: 6px 10px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 
@@ -114,7 +133,7 @@ main { flex: 1; padding: 8px 0 48px; }
 .loading { color: var(--yondr-moss); }
 
 /* ---------------------------------------------------------------- toolbar */
-.toolbar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0;
+.toolbar { position: sticky; top: var(--top-h); z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 0;
            background: color-mix(in srgb, var(--yondr-paper) 94%, transparent); backdrop-filter: blur(8px); }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .fgroup > .lbl { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yondr-moss); margin-right: 4px; }
@@ -352,7 +371,7 @@ table.people select.input { min-width: 130px; }
 .ef .input.changed { border-color: #8aa600; background: #fbffe9; }
 .ed-head { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; background: var(--yondr-paper); }
 .ed-head > .pill { align-self: flex-start; }
-.ed-preview { position: sticky; top: 16px; }
+.ed-preview { position: sticky; top: calc(var(--top-h) + 16px); }
 .ed-preview .addrow { flex-wrap: wrap; align-items: center; }
 .ed-preview .hint { font-size: 12.5px; color: var(--yondr-moss); }
 .ed-preview .addrow select { min-width: 0; flex: 1 1 130px; }
