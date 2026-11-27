@@ -19,7 +19,7 @@ interface Env {
   DB: D1Database;
   YONDR_AUTH_PUBLIC_JWK?: string; // public key of the Yondr Google sign-in (src/auth.ts)
   ALLOWED_EMAIL_DOMAINS?: string; // email domains allowed to sign in
-  OWNER_EMAILS?: string; // always admins (comma-separated)
+  OWNER_EMAILS?: string; // secret: always admins (comma-separated)
   DEFAULT_ROLE?: string; // role for everyone else who signs in (viewer)
   DEV_EMAIL?: string; // local development only (.dev.vars); never set in production
   SLACK_WEBHOOK_URL?: string; // optional secret: Slack incoming webhook for notifications (src/notify.ts)

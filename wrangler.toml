@@ -28,9 +28,8 @@ fallthrough = false
 # Public key of the Yondr Google sign-in (auth.overyondrdev.com) that signs the shared session cookie. Safe to commit.
 YONDR_AUTH_PUBLIC_JWK = '{"kty":"EC","crv":"P-256","x":"BpCjLJMykOsJbtPTm63rdbw2BzRUTNTz3jj9LWqK6AM","y":"RyW0y7Dki1BQ6GnYdD-4FPovGYfoaMmDgr21lNU7xXQ","kid":"yondr-2026-11-26-a3a7e6"}'
 ALLOWED_EMAIL_DOMAINS = "overyondr.com"
-# Roles (src/roles.ts). Owners are always admins; everyone else who signs in starts as DEFAULT_ROLE.
-# OWNER_EMAILS is due to move to a Worker secret (personal emails out of the repo); see README.
-OWNER_EMAILS = "chad@overyondr.com"
+# Roles (src/roles.ts): everyone who signs in starts as DEFAULT_ROLE. Owners (always admins) are the OWNER_EMAILS
+# secret, not a var, so personal emails stay out of the repo: npx wrangler -c wrangler.toml secret put OWNER_EMAILS
 DEFAULT_ROLE = "viewer"
 
 [observability]
