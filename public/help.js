@@ -6,6 +6,12 @@
   var role = 'viewer', admins = [];
   var RANK = { viewer: 0, editor: 1, admin: 2 };
   var ROLE_LABEL = { editor: 'For editors and admins', admin: 'For admins' };
+  // The header is sticky: publish its height as --top-h so sticky toolbars sit under it and anchors/focus scroll clear of it.
+  (function () {
+    var top = document.querySelector('header.top');
+    if (!top || !window.ResizeObserver) return;
+    new ResizeObserver(function () { document.documentElement.style.setProperty('--top-h', Math.ceil(top.getBoundingClientRect().height) + 'px'); }).observe(top);
+  })();
   var ICONS = {
     compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
