@@ -136,7 +136,7 @@ window.YONDR_HELP = {
     { id: 'campaigns', section: 'campaigns', roles: 'all', title: 'What campaigns are', keys: 'campaign track where running channel',
       body: `<p>The <b>Campaigns</b> tab logs where ads run: name, channel (Google Display, LinkedIn…), status, dates, owner, notes and the ads used. Everyone can see campaigns; <span class="badge editor">editors</span> create and change them.</p>` },
     { id: 'campaign-create', section: 'campaigns', roles: 'editor', title: 'Creating a campaign', keys: 'new campaign create add',
-      body: `<p>Choose <b>+ New campaign</b> on the Campaigns tab, or select ads first and pick <b>+ New campaign</b> in the bar at the bottom to include them. Fill in the name, channel, status, dates, owner and notes.</p>` },
+      body: `<p>Choose <b>+ New campaign</b> on the Campaigns tab, or select ads first and pick <b>+ New campaign</b> in the bar at the bottom to include them. Fill in the name, channel, status, dates, owner and notes. For the owner, type the first letters of a colleague’s name and pick them from the list (it shows up to 6 people from the Yondr directory).</p>` },
     { id: 'campaign-ads', section: 'campaigns', roles: 'editor', title: 'Adding and removing a campaign’s ads', keys: 'add ads remove ads campaign assign',
       body: `<ul><li>Select ads, then choose the campaign in <b>Add to campaign…</b> in the bar at the bottom.</li><li>Or open an ad and use <b>Campaigns</b> in its details.</li><li>To remove one, use <b>Remove</b> under it on the campaign, or the ✕ in the ad’s details.</li></ul>` },
     { id: 'campaign-export', section: 'campaigns', roles: 'all', title: 'Exporting campaigns to CSV', keys: 'export csv spreadsheet report excel',
@@ -145,8 +145,8 @@ window.YONDR_HELP = {
       body: `<p>Open the campaign to change its status from the menu, or choose <b>Edit details</b>. <b>Delete campaign</b> (for whoever added it, or an admin) removes the campaign but keeps the ads.</p>` },
 
     // ------------------------------------------------------------------ Admin
-    { id: 'people', section: 'admin', roles: 'admin', title: 'Giving people roles', keys: 'people permissions access add user promote editor admin viewer remove',
-      body: `<ol><li>Open the <b>People</b> tab.</li><li>Under <b>Give someone access</b>, enter their @overyondr.com email, pick a role and choose <b>Save</b>. Or change anyone’s role from the list.</li></ol>
+    { id: 'people', section: 'admin', roles: 'admin', title: 'Giving people roles', keys: 'people permissions access add user promote editor admin viewer remove name search directory',
+      body: `<ol><li>Open the <b>People</b> tab.</li><li>Under <b>Give someone access</b>, start typing their name (or @overyondr.com email), pick them from the list, pick a role and choose <b>Save</b>. Or change anyone’s role from the list.</li></ol>
 <p>They don’t need to have visited first. Next time they sign in, a short tour shows them what they can now do. Setting someone back to viewer removes their extra access.</p>` },
     { id: 'owners', section: 'admin', roles: 'admin', title: 'Owners', keys: 'owner configuration cannot change',
       body: `<p>Owners are set in the portal’s configuration, are always admins, and can’t be changed from the People tab. Admins can’t change their own role either, so there’s always someone who can.</p>` },

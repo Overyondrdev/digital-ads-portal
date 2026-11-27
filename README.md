@@ -46,6 +46,10 @@ Owners (the `OWNER_EMAILS` Worker secret: comma-separated emails, set with
 `npx wrangler -c wrangler.toml secret put OWNER_EMAILS`) are always admins and can't be changed from the portal. Roles live in
 `users`; the API enforces every check (`src/roles.ts`), the UI only hides what you can't do.
 
+Person fields (the campaign **Owner** and **Give someone access** on the People tab) use the shared Yondr people
+picker (`https://auth.overyondrdev.com/people-picker.js`, loaded in `public/index.html`; inputs marked `data-people`):
+type a letter or two and pick from up to 6 people in the Yondr directory. The server-side checks are unchanged.
+
 ## How things work
 
 **Speed.** Motion ads play in every preview and loop while on screen: each GIF is downloaded once and restarted from a

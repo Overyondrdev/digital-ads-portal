@@ -743,6 +743,16 @@
     dlg.showModal();
     return dlg;
   }
+  // The shared people picker (auth.overyondrdev.com/people-picker.js) puts its list on <body>, which a modal <dialog>
+  // covers (top layer, rest inert). While a person field inside a dialog is in use, keep the list inside that dialog.
+  function adoptPeopleList(e) {
+    var t = e.target, box = document.getElementById('ypp-list');
+    if (!box || !t || !t.matches || !t.matches('[data-people]')) return;
+    var home = t.closest('dialog[open]') || document.body;
+    if (box.parentNode !== home) home.appendChild(box);
+  }
+  ['focusin', 'input', 'keydown'].forEach(function (ev) { document.addEventListener(ev, adoptPeopleList, true); document.addEventListener(ev, adoptPeopleList); });
+
   function field(name, lbl, input, hint) { input.name = name; return h('label', {}, [lbl, input, hint ? h('span', { class: 'hint', text: hint }) : null]); }
   function options(map, cur) { return Object.keys(map).map(function (k) { return h('option', { value: k, selected: k === cur, text: map[k] }); }); }
 
@@ -764,7 +774,7 @@
       field('name', 'Campaign name', name),
       h('div', { class: 'two' }, [field('channel', 'Channel', h('select', { class: 'input' }, options(CHANNELS, c.channel))), field('status', 'Status', h('select', { class: 'input' }, options(CSTATUS, c.status)))]),
       h('div', { class: 'two' }, [field('start_date', 'Starts', h('input', { class: 'input', type: 'date', value: c.start_date || '' })), field('end_date', 'Ends', h('input', { class: 'input', type: 'date', value: c.end_date || '' }))]),
-      field('owner_email', 'Owner', h('input', { class: 'input', type: 'email', value: c.owner_email || '', placeholder: 'name@overyondr.com' })),
+      field('owner_email', 'Owner', h('input', { class: 'input', type: 'email', 'data-people': true, autocomplete: 'off', value: c.owner_email || '', placeholder: 'Type a name' })),
       field('notes', 'Notes', h('textarea', { class: 'input', rows: 3, maxlength: 4000, placeholder: 'Audience, budget, placements, results…', text: c.notes || '' })),
       withSel ? h('label', { style: 'flex-direction:row;align-items:center;gap:10px;font-weight:600' }, [withSel, 'Include the ' + ids.length + ' selected ad' + (ids.length > 1 ? 's' : '')]) : null,
       errEl,
@@ -1141,7 +1151,7 @@
       return (value === r.defaultRole ? api('users/' + encodeURIComponent(email), { method: 'DELETE' }) : api('users/' + encodeURIComponent(email), { method: 'PUT', body: { role: value } }))
         .then(function (res) { toast(person(email) + ' is now ' + ROLE_NAMES[value].toLowerCase()); paintPeople(p, res); }).catch(function (e) { toast(e.message); renderPeople(); });
     };
-    var email = h('input', { class: 'input', type: 'email', placeholder: 'name@overyondr.com', 'aria-label': 'Email address', required: true });
+    var email = h('input', { class: 'input', type: 'email', 'data-people': true, autocomplete: 'off', placeholder: 'Type a name', 'aria-label': 'Person (name or email)', required: true });
     var roleSel = h('select', { class: 'input', 'aria-label': 'Role' }, ['editor', 'admin', 'viewer'].map(function (k) { return h('option', { value: k, text: ROLE_NAMES[k] }); }));
     var errEl = h('p', { class: 'err', role: 'alert' });
     var ROLE_HELP = [
