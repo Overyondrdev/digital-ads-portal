@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Strict TypeScript, syntax of every script, every ad in seed/ under 150 KB.
+      - run: npm run check
+      # Bundles the Worker exactly as a deploy would, without deploying (no Cloudflare credentials needed).
+      - run: npx wrangler -c wrangler.toml deploy --dry-run --outdir dist
+
+# Deploys are done by Cloudflare Workers Builds on merges to main (see README), not by Actions,
+# so no Cloudflare secrets are stored in GitHub.

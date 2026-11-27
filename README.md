@@ -1,12 +1,13 @@
-# yondr-ad-portal
+# digital-ads-portal
+
+[![CI](https://github.com/Overyondrdev/digital-ads-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/Overyondrdev/digital-ads-portal/actions/workflows/ci.yml)
 
 The Yondr ad library at **https://ads.overyondrdev.com**: find ads (search, filters, grid or matrix), download them
 (one, a selection or a kit), review and approve them, comment and suggest changes, edit their copy (the ads re-render),
 upload new ones, and log which ads each campaign uses. A bell keeps people posted.
 
-It is its own Cloudflare Worker (`yondr-ad-portal`), separate from `overyondr-website-v1` (overyondrdev.com, `www`,
-`v1`, `v2`). It lives in this folder of the website repo; the folder is self-contained and can move to its own
-repository unchanged.
+It is its own Cloudflare Worker (`yondr-ad-portal`), separate from the website (`overyondr-website-v1`: overyondrdev.com,
+`www`, `v1`, `v2`). It moved here from that repository's `ad-portal/` folder with its full history (November 2026).
 
 | What | Where |
 | --- | --- |
@@ -21,12 +22,17 @@ repository unchanged.
 
 ## Sign-in
 
-Cloudflare Access app "overyondrdev.com (Yondr website dev)" covers `*.overyondrdev.com`: people sign in with an
-`@overyondr.com` email before a request reaches the Worker. As a safety net the Worker also checks Access's signed
-token (`Cf-Access-Jwt-Assertion`: Yondr team signature, issuer, expiry; `src/access.ts`) and takes the email from it.
-Requests without a valid token get a 403, so the portal stays private even if the host were left out of Access.
-`workers_dev` and `preview_urls` are off. The R2 bucket is private: files are only served through the Worker.
-To limit the portal to the marketing team later, add a separate Access app for `ads.overyondrdev.com`.
+People sign in with their Yondr Google account through the shared Yondr sign-in at **auth.overyondrdev.com** (Worker
+`yondr-auth`, in `overyondr-website-v1/auth/`). It sets a signed session cookie for `.overyondrdev.com`;
+`src/yondr-session.js` verifies it with the public key in `wrangler.toml` (`YONDR_AUTH_PUBLIC_JWK`) and only accepts
+`@overyondr.com` (`ALLOWED_EMAIL_DOMAINS`). Signed-out pages redirect to the sign-in and come back; API calls and files
+get a 401 (the app reloads, which signs in again). While Cloudflare Access is being retired, a valid Access token
+(`Cf-Access-Jwt-Assertion`, checked against the Yondr team's keys in `src/access.ts`) is still accepted.
+
+**`src/yondr-session.js` is a copy**: the source of truth is `overyondr-website-v1/auth/src/session.js`, and every
+overyondrdev.com site must use an identical copy. If the sign-in changes there, copy the file here unchanged (the
+website's README lists every copy). `workers_dev` and `preview_urls` are off, and the R2 bucket is private: files are
+only served through the Worker.
 
 ## Roles
 
@@ -95,31 +101,31 @@ There is no click-through URL in the portal: the ads team sets it in each ad pla
 ## Develop
 
 ```sh
-cd ad-portal
-npm install
-echo 'DEV_EMAIL="you@overyondr.com"' > .dev.vars      # stands in for the Access sign-in locally (git-ignored);
+npm ci
+echo 'DEV_EMAIL="you@overyondr.com"' > .dev.vars      # stands in for the sign-in locally (git-ignored);
                                                        # send an X-Dev-Email header to act as someone else
 npm run migrate:local
 npm run seed:local -- --by you@overyondr.com           # uploads the ads, posters and source images to local R2
 npm run dev                                            # http://localhost:8787
-npm run typecheck                                      # TypeScript, strict (also runs in CI)
+npm run check                                          # what CI runs: types, script syntax, ad sizes
 ```
 
-Always run wrangler with `-c wrangler.toml` (the npm scripts do), or it picks up the website's `wrangler.jsonc`.
+The npm scripts call wrangler with `-c wrangler.toml` (a habit from when this lived inside the website repo; harmless).
 App files are bundled into the Worker script (`[[rules]]` in `wrangler.toml`); a new file in `public/` must be added
 to `src/static.ts`.
 
 ## CI and deploy
 
-- **CI**: the `ad-portal` job in `.github/workflows/ci.yml` runs on every pull request and push: `npm ci`, type check,
-  `node --check` on the app scripts and a dry-run bundle. No secrets.
-- **Deploy (recommended): Cloudflare Workers Builds**, like the websites, so merges to `main` deploy themselves and no
-  Cloudflare secrets live in GitHub. One-time setup in the Cloudflare dashboard: Workers & Pages → `yondr-ad-portal` →
-  Settings → Builds → Connect the `overyondr-website-v1` repository, then set
-  - Root directory: `ad-portal`
+- **CI** (`.github/workflows/ci.yml`, every pull request and push to `main`): `npm ci`, `npm run check` (strict
+  TypeScript, `node --check` on the app and generator scripts, ad files under 150 KB) and a dry-run bundle. No secrets.
+- **Deploy: Cloudflare Workers Builds.** Every merge to `main` builds and deploys automatically; no Cloudflare secrets
+  live in GitHub. The `yondr-ad-portal` Worker's build trigger is connected to this repository:
+  - Root directory: `/`
   - Build command: `npm ci && npm run typecheck`
   - Deploy command: `npx wrangler -c wrangler.toml d1 migrations apply yondr-ad-portal-db --remote && npx wrangler -c wrangler.toml deploy`
-  - Production branch: `main`; build watch paths: `ad-portal/*`
+  - Production branch: `main`
+- **Ship a change**: branch from `main`, run `npm run check`, open a PR (template in `.github/`), wait for **CI**,
+  squash-merge. It is live on ads.overyondrdev.com about a minute later. New D1 migrations are applied before the deploy.
 - **Manual deploy** (with a Cloudflare API token in `CLOUDFLARE_API_TOKEN`):
 
 ```sh

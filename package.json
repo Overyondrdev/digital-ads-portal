@@ -1,7 +1,7 @@
 {
-  "name": "yondr-ad-portal",
+  "name": "digital-ads-portal",
   "version": "1.0.0",
-  "description": "Yondr ad library at ads.overyondrdev.com (Cloudflare Worker + R2 + D1)",
+  "description": "Yondr ad library at ads.overyondrdev.com (Cloudflare Worker yondr-ad-portal + R2 + D1)",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
@@ -14,7 +14,9 @@
     "render": "node generator/render.mjs",
     "deploy": "wrangler -c wrangler.toml deploy",
     "pull-copy": "node scripts/pull-copy.mjs --remote",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "check": "node scripts/check.mjs",
+    "fields": "node generator/fields.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261125.1",
@@ -23,5 +25,9 @@
   },
   "engines": {
     "node": ">=22.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Overyondrdev/digital-ads-portal.git"
   }
 }
