@@ -19,9 +19,9 @@ window.YONDR_HELP = {
       body: `<p>The ad library is where Yondr’s display ads live: every ad in every size, ready to preview, download and use, with the copy and specs that go with them.</p>
 <ul><li><b>Ads</b> is the library itself, grouped by size or headline.</li><li><b>Campaigns</b> shows where ads run.</li><li><b>Copy &amp; specs</b> has the ad text for each platform, the specs and the source images.</li><li>Editors also see <b>Edit copy</b>; admins also see <b>People</b>.</li></ul>
 <p>Ads come in <b>ad sets</b>: a group made together, like <i>Harvard Study 2026</i>. Switch sets with the menu at the top right.</p>` },
-    { id: 'sign-in', section: 'start', roles: 'all', title: 'Signing in', keys: 'login log in code email access sign out session',
-      body: `<ol><li>Go to <b>ads.overyondrdev.com</b>.</li><li>Enter your <b>@overyondr.com</b> email address.</li><li>Type the one-time code that arrives by email.</li></ol>
-<p>You stay signed in for about a week on that browser. To sign out, use <b>Sign out</b> at the top right.</p>
+    { id: 'sign-in', section: 'start', roles: 'all', title: 'Signing in', keys: 'login log in google account sign out session',
+      body: `<ol><li>Go to <b>ads.overyondrdev.com</b>.</li><li>Choose your <b>Yondr Google account</b> (your @overyondr.com address) when Google asks.</li><li>You come straight back to the library.</li></ol>
+<p>You stay signed in for 12 hours, across all of Yondr’s preview sites. To sign out, use <b>Sign out</b> at the top right (it signs you out of those sites too).</p>
 <p class="tip">Only @overyondr.com addresses can sign in. If yours doesn’t work, see <a href="#cant-sign-in">I can’t sign in</a>.</p>` },
     { id: 'roles', section: 'start', roles: 'all', title: 'Viewer, editor and admin: what you can do', keys: 'permissions role access rights what can i do',
       body: `<p>Your role is shown next to your email at the top right.</p>
@@ -154,8 +154,8 @@ window.YONDR_HELP = {
       body: `<p>The bottom of the People tab lists recent changes (roles, copy edits, re-renders) and what people said in the help center’s <b>Was this helpful?</b>, so you can spot what’s confusing.</p>` },
 
     // ------------------------------------------------------------------ Troubleshooting
-    { id: 'cant-sign-in', section: 'trouble', roles: 'all', title: 'I can’t sign in', keys: 'login problem code not arriving access denied',
-      body: `<ul><li>Use your <b>@overyondr.com</b> address; others can’t sign in.</li><li>No code? Check spam, wait a minute and try again. Codes expire after a short while, so use the newest one.</li><li>Still stuck? Ask an admin (below).</li></ul>` },
+    { id: 'cant-sign-in', section: 'trouble', roles: 'all', title: 'I can’t sign in', keys: 'login problem google account wrong account access denied',
+      body: `<ul><li>Sign in with your <b>Yondr Google account</b> (@overyondr.com); personal Gmail and other accounts can’t sign in.</li><li>Signed in to Google with another account? Choose <b>Use another account</b> on Google’s page, or sign out of the other one first.</li><li>Sent back to sign in again? Your 12-hour session ended: sign in once more and you’ll return to where you were.</li><li>Still stuck? Ask an admin (below).</li></ul>` },
     { id: 'no-ads', section: 'trouble', roles: 'all', title: 'I don’t see any ads', keys: 'empty no ads nothing shows missing blank approved',
       body: `<p>Viewers see approved ads by default. If nothing has been approved yet, you’ll see “No approved ads yet”: choose <b>Show ads in review</b> (or the Status filter) to look at them, and check with an editor before using one. Otherwise, <b>Clear filters</b> or the search box may be hiding them.</p>` },
     { id: 'no-edit', section: 'trouble', roles: 'all', title: 'I don’t see Edit, Upload or People', keys: 'missing button edit upload cant edit permission viewer',

@@ -1,8 +1,8 @@
-// Roles for the ad portal. Everyone who gets through Cloudflare Access (any @overyondr.com email) can sign in.
+// Roles for the ad portal. Everyone with a Yondr Google account (@overyondr.com) can sign in.
 //   viewer  see ads, download them, comment                        (everyone, unless given another role)
 //   editor  + edit ad copy and CTA (re-renders ads), upload, set status and dates, review, campaigns
 //   admin   + give people roles (People tab), delete any ad or campaign
-// Owners (OWNER_EMAILS in wrangler.toml) are always admins and can't be changed from the portal.
+// Owners (OWNER_EMAILS) are always admins and can't be changed from the portal.
 
 import { notify } from './notify';
 

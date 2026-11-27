@@ -11,7 +11,7 @@ It is its own Cloudflare Worker (`yondr-ad-portal`), separate from the website (
 
 | What | Where |
 | --- | --- |
-| Worker: API, files, uploads | `src/index.ts`; roles `src/roles.ts`; notifications `src/notify.ts`; Access check `src/access.ts`; app files `src/static.ts` |
+| Worker: API, files, uploads | `src/index.ts`; roles `src/roles.ts`; notifications `src/notify.ts`; sign-in check `src/auth.ts`; app files `src/static.ts` |
 | App (no framework, no runtime dependencies) | `public/index.html`, `app.js`, `app.css`, `tour.js`, `brand/` |
 | Editing (loaded only for editors) | `public/editor.js` (edit an ad, Edit copy tab, history), `public/render.js` (renderer + GIF encoder) |
 | Help center (`/help`) | `public/help.html`, `help.js`, `help.css`; **articles in `public/help-content.js`** |
@@ -26,8 +26,8 @@ People sign in with their Yondr Google account through the shared Yondr sign-in 
 `yondr-auth`, in `overyondr-website-v1/auth/`). It sets a signed session cookie for `.overyondrdev.com`;
 `src/yondr-session.js` verifies it with the public key in `wrangler.toml` (`YONDR_AUTH_PUBLIC_JWK`) and only accepts
 `@overyondr.com` (`ALLOWED_EMAIL_DOMAINS`). Signed-out pages redirect to the sign-in and come back; API calls and files
-get a 401 (the app reloads, which signs in again). While Cloudflare Access is being retired, a valid Access token
-(`Cf-Access-Jwt-Assertion`, checked against the Yondr team's keys in `src/access.ts`) is still accepted.
+get a 401 (the app reloads, which signs in again). Only this session counts (`src/auth.ts`): Cloudflare Access is set to
+Bypass for ads.overyondrdev.com and its tokens are not accepted.
 
 **`src/yondr-session.js` is a copy**: the source of truth is `overyondr-website-v1/auth/src/session.js`, and every
 overyondrdev.com site must use an identical copy. If the sign-in changes there, copy the file here unchanged (the
@@ -42,7 +42,7 @@ only served through the Worker.
 | Editor | + Edit copy and CTA (ads re-render), upload, replace files, set status and run dates, review queue and bulk approve, campaigns, ad sets, copy history. |
 | Admin | + People tab (roles, recent changes, help feedback), delete any ad or campaign. |
 
-Owners (`OWNER_EMAILS` in `wrangler.toml`) are always admins and can't be changed from the portal. Roles live in
+Owners (`OWNER_EMAILS`, comma-separated; still a var in `wrangler.toml`, due to become a Worker secret) are always admins and can't be changed from the portal. Roles live in
 `users`; the API enforces every check (`src/roles.ts`), the UI only hides what you can't do.
 
 ## How things work
