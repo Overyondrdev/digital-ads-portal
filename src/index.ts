@@ -1,8 +1,7 @@
 // yondr-ad-portal: the Yondr ad library at https://ads.overyondrdev.com
 //
-// Cloudflare Access (app "overyondrdev.com (Yondr website dev)", *.overyondrdev.com) signs people in at the edge,
-// before requests reach this Worker. The Worker verifies Access's signed token (src/access.ts) for who it is, and
-// refuses requests without one, so the portal stays private even if the host were ever left out of Access.
+// Sign-in: the Yondr Google sign-in (auth.overyondrdev.com). The Worker verifies its session cookie (src/auth.ts);
+// signed-out pages are sent to sign in, and API calls and files without a session get a 401.
 //   /            the app (public/: index.html, app.js, app.css, brand files), bundled into the script (src/static.ts)
 //   /files/<key> ad files from R2 (AD_ASSETS); the bucket itself is private
 //   /api/*       JSON API over D1 (DB): ad sets, ads, uploads, copy edits, reviews, comments, campaigns, downloads, people
@@ -10,7 +9,7 @@
 // Who can do what: src/roles.ts (viewer / editor / admin).
 
 import { serveStatic } from './static';
-import { accessEmail } from './access';
+import { signedInEmail } from './auth';
 import { loginUrl } from './yondr-session.js';
 import { can, helpContacts, helpFeedback, log, seen, setTourRole, tourRole, usersApi, whoIs, type Who } from './roles';
 import { editors, inbox, notify } from './notify';
@@ -18,7 +17,8 @@ import { editors, inbox, notify } from './notify';
 interface Env {
   AD_ASSETS: R2Bucket;
   DB: D1Database;
-  ACCESS_TEAM_DOMAIN: string; // Yondr's Cloudflare Access team, which signs the sign-in tokens
+  YONDR_AUTH_PUBLIC_JWK?: string; // public key of the Yondr Google sign-in (src/auth.ts)
+  ALLOWED_EMAIL_DOMAINS?: string; // email domains allowed to sign in
   OWNER_EMAILS?: string; // always admins (comma-separated)
   DEFAULT_ROLE?: string; // role for everyone else who signs in (viewer)
   DEV_EMAIL?: string; // local development only (.dev.vars); never set in production
@@ -505,7 +505,7 @@ async function api(request: Request, env: Env, path: string, email: string, ctx:
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
-    const email = await accessEmail(request, env);
+    const email = await signedInEmail(request, env);
     if (!email) {
       // Pages go to the Yondr Google sign-in and come back; API calls and files get a 401.
       if ((request.method === 'GET' || request.method === 'HEAD') && !url.pathname.startsWith('/api/') && !url.pathname.startsWith('/files/'))
