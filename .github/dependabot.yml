@@ -1,14 +1,20 @@
+# Dependabot: weekly. Minor + patch updates are grouped into one PR per ecosystem; major updates get their own PRs.
+# GitHub Actions are pinned to commit SHAs (version in a trailing comment); Dependabot updates the SHA and comment.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
-    schedule:
-      interval: weekly
-    groups:
-      dev-tooling:
-        patterns: ["*"]
+    schedule: { interval: weekly }
     open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
-    schedule:
-      interval: monthly
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 5
+    groups:
+      actions-minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
