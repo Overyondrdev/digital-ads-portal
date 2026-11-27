@@ -1,4 +1,5 @@
-// What CI checks (npm run check): strict TypeScript, syntax of every browser and Node script, and that every ad in
+// What CI checks (npm run check): strict TypeScript, syntax of every browser and Node script, no secrets in tracked
+// files (scripts/secret-scan.mjs), and that every ad in
 // seed/ is under the 150 KB limit ad networks set. Fast and needs no Cloudflare account.
 import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
@@ -9,6 +10,7 @@ run('npx', ['tsc', '-p', 'tsconfig.json']);
 for (const dir of ['public', 'generator', 'scripts']) {
   for (const f of readdirSync(dir)) if (/\.(m?js)$/.test(f)) run(process.execPath, ['--check', join(dir, f)]);
 }
+run(process.execPath, ['scripts/secret-scan.mjs']); // no API keys, tokens or private keys in tracked files
 const LIMIT = 150_000;
 const m = JSON.parse(readFileSync('seed/manifest.json', 'utf8'));
 const over = m.creatives.filter((c) => statSync(join('seed', c.file)).size > LIMIT);
