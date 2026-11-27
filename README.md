@@ -42,7 +42,8 @@ only served through the Worker.
 | Editor | + Edit copy and CTA (ads re-render), upload, replace files, set status and run dates, review queue and bulk approve, campaigns, ad sets, copy history. |
 | Admin | + People tab (roles, recent changes, help feedback), delete any ad or campaign. |
 
-Owners (`OWNER_EMAILS`, comma-separated; still a var in `wrangler.toml`, due to become a Worker secret) are always admins and can't be changed from the portal. Roles live in
+Owners (the `OWNER_EMAILS` Worker secret: comma-separated emails, set with
+`npx wrangler -c wrangler.toml secret put OWNER_EMAILS`) are always admins and can't be changed from the portal. Roles live in
 `users`; the API enforces every check (`src/roles.ts`), the UI only hides what you can't do.
 
 ## How things work
