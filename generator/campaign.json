@@ -108,16 +108,16 @@
   ],
   "photos": {
     "hands": {
-      "src": "v2/src/assets/images/pouch-hands.jpg",
+      "src": "generator/assets/pouch-hands.jpg",
       "alt": "Students locking their phones in Yondr pouches at school"
     },
     "desk": {
-      "src": "v2/src/assets/images/pouch-desk.jpg",
+      "src": "generator/assets/pouch-desk.jpg",
       "alt": "A locked Yondr pouch on a student’s desk while they write"
     }
   },
   "pouch": {
-    "src": "v2/src/assets/images/product-pouch.png",
+    "src": "generator/assets/product-pouch.png",
     "alt": "Yondr phone pouch with a phone inside"
   }
 }

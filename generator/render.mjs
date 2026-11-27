@@ -1,10 +1,10 @@
 // Renders the campaign's display ads: a JPEG still per concept and an animated GIF per headline and size.
 //
-//   npm ci --prefix v2          (fonts and photos come from the V2 site)
-//   node ad-portal/generator/render.mjs [--size 300x250] [--headline h1] [--view pouch|in-use|motion]
+//   (fonts in generator/fonts, photos in generator/assets)
+//   node generator/render.mjs [--size 300x250] [--headline h1] [--view pouch|in-use|motion]
 //
 // Needs Playwright with Chromium (require('playwright')), Python 3 with Pillow, and ffmpeg.
-// Writes ad-portal/seed/ (files + manifest.json); encode.py keeps every file under 150 KB.
+// Writes seed/ (files + manifest.json); encode.py keeps every file under 150 KB.
 // Then `npm run seed:remote` uploads them to R2 and records them in D1.
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
@@ -14,7 +14,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const repo = resolve(here, '../..');
+const repo = resolve(here, '..');   // repository root: campaign.json image paths are relative to it
 const require = createRequire(import.meta.url);
 let chromium;
 try { ({ chromium } = require('playwright')); } catch {

@@ -120,7 +120,7 @@ for j in jobs:
 # Source images (pouch cut-out and photos) so the team can make other formats.
 sources = []
 os.makedirs(os.path.join(out, 'source'), exist_ok=True)
-repo = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # website repo root (photos come from v2/)
+repo = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # repository root (photos in generator/assets/)
 for key, src in [('pouch', c['pouch'])] + list(c['photos'].items()):
     im = Image.open(os.path.join(repo, src['src']))
     im.thumbnail((2000, 2000))

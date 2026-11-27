@@ -1,22 +1,22 @@
 # Display ads
 
 Generates the Harvard study ads for the ad portal (ads.overyondrdev.com) from one HTML template in the V2 website style.
-Run from the website repo root: fonts and photos come from `v2/`.
+Self-contained: fonts are in `fonts/`, photos in `assets/` (from the V2 website). Run from the repository root.
 
 | File | What |
 | --- | --- |
 | `campaign.json` | Copy (headlines, descriptions, stat, CTA, source line), sizes, photos. Edit this to change wording. |
 | `ad.html` | The template: three scenes (students using the pouch, the 1–2 weeks stat, the pouch end card) laid out for each size. |
 | `render.mjs` | Opens the template in Chromium, screenshots every still and every motion frame. |
-| `encode.py` | JPEG stills and GIF motion, each under 150 KB; writes `ad-portal/seed/` (`still/`, `motion/`, `source/`, `manifest.json`). |
+| `encode.py` | JPEG stills and GIF motion, each under 150 KB; writes `seed/` (`still/`, `motion/`, `source/`, `manifest.json`). |
 
 ## Run
 
 ```sh
-npm ci --prefix v2                 # fonts and photos come from the V2 site
-node ad-portal/generator/render.mjs        # all 90 ads, about 5 minutes
-node ad-portal/generator/render.mjs --size 728x90 --headline h2 --view motion   # just some
-cd ad-portal && npm run seed:remote -- --by you@overyondr.com   # load them into the portal
+npm run pull-copy                  # first, if copy was edited in the portal
+node generator/render.mjs          # all 90 ads, about 5 minutes
+node generator/render.mjs --size 728x90 --headline h2 --view motion   # just some
+npm run seed:remote -- --by you@overyondr.com --copy   # load them into the portal
 ```
 
 Needs Playwright with Chromium, Python 3 with Pillow, and ffmpeg.
@@ -38,7 +38,7 @@ after copy edits, so a change here changes both. Run `npm run pull-copy` first i
 
 Every text element in `ad.html` carries `data-field` (its copy path), and `build()` returns the fields an ad shows.
 The portal's editor offers exactly those, from the `FIELDS` table in `public/editor.js`: after changing the template,
-run `node ad-portal/generator/fields.mjs` and paste its output there. The stat line on the stills (`stat.line`)
+run `node generator/fields.mjs` and paste its output there. The stat line on the stills (`stat.line`)
 highlights the stat number and the word after it.
 
 Everything is rendered at 2× and downsampled with Lanczos plus a light unsharp mask (lighter for motion), which keeps
