@@ -19,6 +19,7 @@ Never force-push `main`. Never commit `node_modules/`, `dist/`, `.wrangler/`, `.
 
 ## Rules
 - The API enforces roles (`src/roles.ts`); the UI only hides. Every write goes through the `editor()` guard.
+- Person fields use the shared directory picker (overyondr-website-v1 docs/PLATFORM.md §8): `data-people` on the input.
 - D1 schema changes are new files in `migrations/` (never edit an applied one) and must be safe to apply before the new
   code is live, because Workers Builds applies them first.
 - A new file in `public/` must be added to `src/static.ts` (app files are bundled into the Worker).

@@ -18,7 +18,7 @@
       { sel: '.card .btn.forest', title: 'Edit any ad', text: 'Click Edit to change an ad’s text with a live preview; it updates in the background. Review steps through ads waiting for approval.', pad: 6 },
     ],
     admin: [
-      { sel: '[data-tab="people"]', title: 'Give people access', text: 'On People, make someone a viewer, editor or admin. The bell keeps everyone posted on suggestions and reviews.' },
+      { sel: '[data-tab="people"]', title: 'Give people access', text: 'On People, type a name to find someone and make them a viewer, editor or admin. The bell keeps everyone posted on suggestions and reviews.' },
     ],
   };
   var NEW_TITLE = { editor: 'You’re now an editor', admin: 'You’re now an admin' };
