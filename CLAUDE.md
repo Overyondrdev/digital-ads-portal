@@ -1,5 +1,10 @@
 # digital-ads-portal — instructions for Claude
 
+**Start with the [overyondrdev.com Handbook](https://github.com/Overyondrdev/overyondr-website-v1/blob/main/docs/handbook/README.md)**:
+the single source of truth for the whole platform (what runs where, sign-in without Cloudflare seats, portals, people
+directory, operations, auto-fix, how we work, runbooks, decisions). If your change alters what it says, update it in
+the same work (a PR in overyondr-website-v1).
+
 The Yondr ad library at **https://ads.overyondrdev.com**: one Cloudflare Worker (`yondr-ad-portal`) with a D1 database
 (`yondr-ad-portal-db`) and a private R2 bucket (`yondr-ad-portal-assets`). Staff browse, download, review and edit
 display ads; editors' copy changes re-render the ads in the browser. README.md describes every feature.
